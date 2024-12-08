@@ -5,7 +5,7 @@
 >
 > Use at your own risk. You should only attempt this if you understand what it does. If the terms `JSON parsing & data manipulation` do not make sense, just walk away.
 >
-> That being said, this will also show you hidden areas of a map—hence the cheat part. **Back up** the save file before running the script.
+> That being said, this will also show you hidden areas of a map, hence the cheat part. **Back up** the save file before running the script.
 >
 > In order for the script to find a JSON save game, you must have started the level and selected `Save and Exit`. For each map that you save and exit, you will be able to select from the script's main menu.
 
