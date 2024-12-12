@@ -1,0 +1,24 @@
+{
+    "custom_colors": {
+        "obsidian": "#120014",
+        "stone": "#3b3a3a",
+        "heart": "#FF0000",
+        "claimed": "#0d9753",
+        "enemyPath": "#f0f0f0",
+        "stairs": "#FFFFFF",
+        "gold": "#FFD700",
+        "secretstonecarved": "#FFFF00",
+        "secretbasement": "#A9A9A9",
+        "infinitemine": "#D8BFD8"
+    },
+    "custom_labels": {
+        "enemypath": "Enemy Path",
+        "enemypathmonastery": "Enemy Path Monastery",
+        "heartcenter": "Heart Center",
+        "heartcenternofloor": "Heart Center No Floor",
+        "infinitemine": "Infinite Gold Mine",
+        "portalcenter": "Portal Center",
+        "sapperpath": "Sapper Path",
+        "secretstonesewer": "Secret Stone Sewer"
+    }
+}
