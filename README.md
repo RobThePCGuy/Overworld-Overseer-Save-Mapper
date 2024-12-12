@@ -1,4 +1,4 @@
-# Underworld Overseer Map Visualization
+# Underworld Overseer Map Mapper
 
 >[!IMPORTANT]
 > This is an **unofficial modification/cheat**. It is not supported by the developer, nor should you blame me or them if your toaster blows up.
