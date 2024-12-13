@@ -1,23 +1,18 @@
 # Underworld Overseer Map Mapper
 
 >[!IMPORTANT]
-> This is an **unofficial modification/cheat**. It is not supported by the developer, nor should you blame me or them if your toaster blows up.
+> This is an **unofficial modification**. It is not supported by the developer, nor should you blame me or them if your toaster blows up. **Back up** the save file(s) before running the script.
 >
-> Use at your own risk. You should only attempt this if you understand what it does. If the terms `JSON parsing & data manipulation` do not make sense, just walk away.
->
-> That being said, this will also show you hidden areas of a map, hence the cheat part. **Back up** the save file before running the script.
->
-> In order for the script to find a JSON save game, you must have started the level and selected `Save and Exit`. For each map that you save and exit, you will be able to select from the script's main menu.
+> In order for the script to find a JSON save game, you must have started the level and selected `Save and Exit`. For each map that you `Save and Exit`, you will be able to select from the script's main menu.
 
 ## Features
 
-- Scans the designated saves directory for available JSON save files.
-- Parses and processes map data from JSON files, adjusting coordinates for accurate grid representation.
-- Generates a grid representing the game map, with each cell colored according to its descriptor.
-- Shows an accurate grid x, y matching the JSON file exactly.
-- Includes a sidebar listing all descriptors with their corresponding colors. Clicking on a legend item highlights all cells with that descriptor.
-- Clicking an individual cell block also highlights and emboldens the matching legend descriptor.
-- Utilizes JavaScript to enable users to search, filter, and highlight specific map areas by interacting with the legend.
+- Scans the game save directory for JSON maps.
+- The script parses the JSON map data from the saved game JSON file(s).
+- Generates an accurate 2D grid of the level map.
+- Includes a legend that lists all descriptors with their corresponding colors.
+- Highlights grids per selection, dimming the rest.
+- Find descriptos easily with the search bar.
 - Uses a separate config file for changing colors and naming conventions.
 - Includes a command line interface.
 
@@ -31,7 +26,7 @@
 
 2. Clone this repository to your local machine:
 
-   ```cmd
+   ```bash
    git clone https://github.com/RobThePCGuy/Underworld-Overseer-Save-Mapper.git
    cd Underworld-Overseer-Save-Mapper
    ```
@@ -68,31 +63,37 @@ To utilize the configuration file for custom colors and labels, edit or create a
     },
     "custom_labels": {
         "enemypath": "Enemy Path",
+        "hornethive": "Hornet Hive",
+        "secretbasement": "Secret Basement",
+        "waterbridge": "Water Bridge",
+        "beetlenest": "Beetle Nest",
+        "stonemine": "Stone Mine",
         "enemypathmonastery": "Enemy Path Monastery",
+        "enemypathdesert": "Enemy Path Desert",
         "heartcenter": "Heart Center",
         "heartcenternofloor": "Heart Center No Floor",
         "infinitemine": "Infinite Gold Mine",
         "portalcenter": "Portal Center",
+        "portalbonefairy": "Portal Bone Fairy",
+        "portalbonefairycenter": "Portal Bone Fairy Center",
         "sapperpath": "Sapper Path",
+        "guardpost": "Guard Post",
+        "secretobsidiancarved": "Secret Obsidian Carved",
+        "secretstonecarved": "Secret Stone Carved",
         "secretstonesewer": "Secret Stone Sewer"
     }
 }
 ```
 
-4. The script searches for JSON save files in the default directory:
+4. The script looks for JSON save files in the default directory:
 
-   ```cmd
-   ~\AppData\LocalLow\MyronSoftware\UnderworldOverseer\Saves
-   ```
+    `~\AppData\LocalLow\MyronSoftware\UnderworldOverseer\Saves`
 
-   - If your saves are stored elsewhere, you can provide a custom file path when prompted.
+    You can choose a number that represents the save file to process, or you can enter a custom path.
 
-5. Choose one of the existing JSON save files. Enter the number corresponding to the desired file.
-   - Optionally, you may enter a custom path.
+5. After selecting a file, the script will process the map information and create an HTML file next to it.
 
-6. After selecting a file, the script will process the map data and generate an HTML file in the same directory as the script, named the same as the selected file.
-
-7. Open the generated HTML file in your preferred web browser to interact with the map visualization.
+6. To use the map, open it in your preferred web browser.
 
 ## Contributing
 

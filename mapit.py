@@ -111,109 +111,143 @@ def generate_html(descriptor_colors: dict, formatted_descriptors: pd.DataFrame, 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Underworld Overseer Save Map Visualization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underworld Overseer Save Mapper</title>
     <style>
-        body {{
-            font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; background-color: #f0f0f0;
-        }}
-        h1 {{
-            margin: 20px 0;
-        }}
-        .container {{
-            display: flex; flex-direction: row; align-items: flex-start; margin-bottom: 20px; width: 90%;
-            flex-wrap: wrap;
-        }}
-        .map-grid {{
-            display: grid; 
-            grid-template-rows: repeat({grid_height}, 20px); 
-            grid-template-columns: repeat({grid_width}, 20px); 
-            gap: 1px; 
-            background-color: #333; 
-            border: 2px solid #333;
-            overflow: auto;
-            max-height: 80vh;
-            max-width: 80vw;
-        }}
-        .map-cell {{
-            width: 20px; 
-            height: 20px; 
-            box-sizing: border-box; 
-            transition: opacity 0.3s; 
-            border: 1px solid #ccc;
-            cursor: pointer;
-        }}
-        .map-cell.empty {{
-            background-color: #fff;
-        }}
-        .legend {{
-            margin-left: 20px; 
-            display: flex; 
-            flex-direction: column;
-            max-height: 80vh;
-            overflow-y: auto;
-        }}
-        .legend h2 {{
-            margin-bottom: 10px;
-        }}
-        .legend-item {{
-            display: flex; 
-            align-items: center; 
-            margin-bottom: 10px; 
-            cursor: pointer; 
-            transition: transform 0.2s;
-        }}
-        .legend-item:hover {{
-            transform: scale(1.05);
-        }}
-        .legend-color {{
-            width: 20px; 
-            height: 20px; 
-            margin-right: 10px; 
-            border: 1px solid #000;
-        }}
-        .highlight {{
-            opacity: 1 !important;
-            transform: scale(1.2);
-        }}
-        .dimmed {{
-            opacity: 0.2;
-        }}
-        .legend-item.active {{
-            background-color: #e0e0e0;
-            border: 2px solid #000;
-            transform: scale(1.1);
-            transition: transform 0.2s;
-        }}
-        /* Search Bar */
-        .search-bar {{
-            margin: 20px 0;
-            width: 90%;
-            max-width: 400px;
-            display: flex;
-        }}
-        .search-bar input {{
-            flex: 1;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 4px 0 0 4px;
-            outline: none;
-        }}
-        .search-bar button {{
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-left: none;
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            border-radius: 0 4px 4px 0;
-        }}
-        .search-bar button:hover {{
-            background-color: #45a049;
-        }}
+body {{
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #f9f9f9, #dfe9f3);
+  color: #333;
+}}
+h1 {{
+  margin: 10px 0;
+  font-size: 24px;
+  color: #222;
+}}
+.container {{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}}
+.map-grid {{
+  display: grid;
+  grid-template-rows: repeat({grid_height}, 20px);
+  grid-template-columns: repeat({grid_width}, 20px);
+  gap: 1px;
+  background-color: #444;
+  border: 2px solid #444;
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 80vh;
+  max-width: 80vw;
+}}
+.map-cell {{
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  transition: transform 0.2s, opacity 0.3s;
+  border: 1px solid rgba(200, 200, 200, 0.5);
+  cursor: pointer;
+  background-color: #fff;
+}}
+.map-cell.empty {{
+  background-color: #fff;
+}}
+.map-cell:hover {{
+  transform: scale(1.1);
+  background-color: rgba(0, 0, 0, 0.1);
+}}
+.legend {{
+  margin-left: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-y: auto;
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}}
+.legend h2 {{
+  margin-bottom: 10px;
+  font-size: 18px;
+}}
+.legend-item {{
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  padding: 4px;
+  border-radius: 4px;
+}}
+.legend-item:hover {{
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}}
+.legend-color {{
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}}
+.legend-item.active {{
+  background-color: #e0e0e0;
+  border: 1px solid #000;
+  transform: scale(1.2);
+  transition: transform 0.2s;
+}}
+.highlight {{
+  opacity: 1 !important;
+  transform: scale(1.1);
+}}
+.dimmed {{
+  opacity: 0.2;
+}}
+.search-bar {{
+  margin: 18px 0;
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+}}
+.search-bar input {{
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px 0 0 8px;
+  outline: none;
+  transition: border-color 0.3s;
+}}
+.search-bar input:focus {{
+  border-color: #4caf50;
+}}
+.search-bar button {{
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-left: none;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  border-radius: 0 8px 8px 0;
+  transition: background-color 0.3s;
+}}
+.search-bar button:hover {{
+  background-color: #45a049;
+}}
     </style>
 </head>
 <body>
-    <h1>Game Map - Underworld Overseer</h1>
+    <h1>Underworld Overseer</h1>
     <div class="search-bar">
         <input type="text" id="searchInput" placeholder="Search Descriptor...">
         <button onclick="searchDescriptor()">Search</button>
@@ -301,7 +335,7 @@ def load_config(config_path: Path) -> dict:
 
 def parse_arguments():
     """Parse command-line arguments."""
-    parser = argparse.ArgumentParser(description="Underworld Overseer Save Map Visualization Tool")
+    parser = argparse.ArgumentParser(description="Underworld Overseer Save Mapper")
     parser.add_argument('-s', '--saves_dir', type=str, help='Path to the saves directory')
     parser.add_argument('-o', '--output', type=str, help='Path for the output HTML file')
     parser.add_argument('-c', '--config', type=str, help='Path to the JSON config file for colors and labels')

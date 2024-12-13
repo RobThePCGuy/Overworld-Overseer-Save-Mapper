@@ -13,12 +13,23 @@
     },
     "custom_labels": {
         "enemypath": "Enemy Path",
+        "hornethive": "Hornet Hive",
+        "secretbasement": "Secret Basement",
+        "waterbridge": "Water Bridge",
+        "beetlenest": "Beetle Nest",
+        "stonemine": "Stone Mine",
         "enemypathmonastery": "Enemy Path Monastery",
+        "enemypathdesert": "Enemy Path Desert",
         "heartcenter": "Heart Center",
         "heartcenternofloor": "Heart Center No Floor",
         "infinitemine": "Infinite Gold Mine",
         "portalcenter": "Portal Center",
+        "portalbonefairy": "Portal Bone Fairy",
+        "portalbonefairycenter": "Portal Bone Fairy Center",
         "sapperpath": "Sapper Path",
+        "guardpost": "Guard Post",
+        "secretobsidiancarved": "Secret Obsidian Carved",
+        "secretstonecarved": "Secret Stone Carved",
         "secretstonesewer": "Secret Stone Sewer"
     }
 }
