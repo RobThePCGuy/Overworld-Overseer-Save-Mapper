@@ -67,6 +67,7 @@ To utilize the configuration file for custom colors and labels, edit or create a
         "secretbasement": "Secret Basement",
         "waterbridge": "Water Bridge",
         "beetlenest": "Beetle Nest",
+        "factorybubble": "Bubble Factory",
         "stonemine": "Stone Mine",
         "enemypathmonastery": "Enemy Path Monastery",
         "enemypathdesert": "Enemy Path Desert",
