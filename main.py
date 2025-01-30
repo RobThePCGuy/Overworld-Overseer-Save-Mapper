@@ -9,6 +9,8 @@ import re
 import argparse
 import logging
 from typing import List, Dict, Tuple, Any
+import sys
+import sys  # Import sys again for clarity in EXE path context
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
@@ -172,15 +174,15 @@ def generate_html(
     descriptor_colors: Dict[str, str],
     formatted_descriptors: pd.DataFrame,
     map_html: str,
-    output_html: Path,
+    output_html: Path, # output_html is already Path object, keep it as is.
     grid_height: int,
     grid_width: int,
-) -> None:
+) -> None: # output_html is Path
     legend_items_html = "\n".join(
-        f'<div class="legend-item" data-descriptor="{row["DescriptorID"]}">\n'
-        f'<span class="legend-color" style="background-color: {descriptor_colors[row["DescriptorID"]]}">\n</span>'
-        f'<span class="legend-label">{row["FormattedDescriptorID"]}\n</span>'
-        f'<input type="color" class="color-picker" data-descriptor="{row["DescriptorID"]}" value="{descriptor_colors[row["DescriptorID"]]}">\n'
+        f'<div class="legend-item" data-descriptor="{row["DescriptorID"]}">'
+        f'<span class="legend-color" style="background-color: {descriptor_colors[row["DescriptorID"]]}"></span>'
+        f'<span class="legend-label">{row["FormattedDescriptorID"]}</span>'
+        f'<input type="color" class="color-picker" data-descriptor="{row["DescriptorID"]}" value="{descriptor_colors[row["DescriptorID"]]}">'
         f"</div>"
         for _, row in formatted_descriptors.iterrows()
     )
@@ -204,7 +206,7 @@ def generate_html(
         grid_width=grid_width,
     )
 
-    with output_html.open("w", encoding="utf-8") as html_file:
+    with output_html.open("w", encoding="utf-8") as html_file: # use output_html Path object
         html_file.write(html_content)
     logging.info(f"Map visualization saved as '{output_html}'.")
 
@@ -229,6 +231,7 @@ def main() -> None:
         if save_files:
             display_save_files(save_files)
             user_choice = get_user_choice(len(save_files) + 1)
+            display_save_files(save_files)
             selected_file_path = (
                 save_files[user_choice - 1]
                 if user_choice <= len(save_files)
@@ -270,14 +273,21 @@ def main() -> None:
         map_html = generate_map_html_optimized(
             map_df, descriptor_colors, x_min, x_max, y_min, y_max
         )
-        script_dir = Path(__file__).parent
-        output_file_path = Path(script_dir / f"{selected_file_path.stem}.html")
+
+        # --- Get the directory of the executable ---
+        if getattr(sys, 'frozen', False): # Check if running as compiled EXE
+            exe_dir = Path(sys.executable).parent
+        else: # Running as script
+            exe_dir = Path(__file__).parent # Fallback to script directory
+
+        output_file_name = f"{selected_file_path.stem}.html"
+        output_file_path = exe_dir / output_file_name # Path relative to EXE dir
 
         generate_html(
             descriptor_colors,
             formatted_descriptors,
             map_html,
-            output_file_path,
+            output_file_path, # Pass the Path object
             grid_height,
             grid_width,
         )
