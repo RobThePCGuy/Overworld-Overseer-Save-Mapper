@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underworld Overseer Save Mapper</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto&display=swap" rel="stylesheet">
+    <style>
+:root {{
+--bg-color: #f9f9f9;
+--container-bg: #fff;
+--text-color: #333;
+--header-color: #222;
+--legend-bg: #f4f4f4;
+--legend-shadow: rgba(0, 0, 0, 0.1);
+--cell-border: rgba(200, 200, 200, 0.5);
+--grid-bg: #444;
+--hover-bg: rgba(0, 0, 0, 0.1);
+--search-border: #ccc;
+--search-focus-border: #4caf50;
+--search-focus-shadow: rgba(76, 175, 80, 0.5);
+--button-bg: #4caf50;
+--button-text: white;
+--button-hover-bg: #45a049;
+--button-hover-shadow: rgba(69, 160, 73, 0.5);
+--active-legend-bg: #e0e0e0;
+--active-legend-border: #000;
+--grid-height: 10;
+--grid-width: 10;
+}}
+body.dark-mode {{
+--bg-color: #121212;
+--container-bg: #222;
+--text-color: #eee;
+--header-color: #fff;
+--legend-bg: #333;
+--legend-shadow: rgba(255, 255, 255, 0.1);
+--cell-border: rgba(80, 80, 80, 0.5);
+--grid-bg: #555;
+--hover-bg: rgba(255, 255, 255, 0.05);
+--search-border: #666;
+--search-focus-border: #689F38;
+--search-focus-shadow: rgba(104, 159, 56, 0.5);
+--button-bg: #689F38;
+--button-hover-bg: #558B2F;
+--button-hover-shadow: rgba(85, 139, 47, 0.5);
+--active-legend-bg: #555;
+--active-legend-border: #eee;
+}}
+body {{
+font-family: 'Roboto', sans-serif;
+margin: 0;
+padding: 0;
+display: flex;
+flex-direction: column;
+align-items: center;
+background-color: var(--bg-color);
+color: var(--text-color);
+transition: background-color 0.5s, color 0.5s;
+}}
+body * {{
+outline: none;
+}}
+h1 {{
+margin: 10px 0;
+font-size: 24px;
+color: var(--header-color);
+font-family: 'MedievalSharp', cursive;
+}}
+.container {{
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: flex-start;
+margin-bottom: 20px;
+max-width: 95vw;
+background-color: var(--container-bg);
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 4px 12px var(--legend-shadow);
+position: relative;
+overflow-x: auto;
+}}
+.map-grid {{
+display: grid;
+grid-template-rows: repeat(var(--grid-height), 20px);
+grid-template-columns: repeat(var(--grid-width), 20px);
+gap: 1px;
+background-color: var(--grid-bg);
+border: 2px solid var(--grid-bg);
+border-radius: 8px;
+overflow: auto;
+max-width: 80vw;
+transform-origin: top left;
+transition: transform 0.3s ease-out;
+}}
+.map-cell {{
+width: 20px;
+height: 20px;
+box-sizing: border-box;
+transition: opacity 0.3s;
+border: 1px solid var(--cell-border);
+cursor: pointer;
+background-color: var(--container-bg);
+}}
+.map-cell.empty {{
+background-color: var(--container-bg);
+}}
+.map-cell:focus, .legend-item:focus, .search-bar button:focus, .search-bar input:focus, .zoom-button:focus, .theme-switch-wrapper input:focus + .slider {{
+box-shadow: 0 0 0 2px var(--search-focus-border);
+border-radius: 2px;
+}}
+.map-cell:hover {{
+background-color: var(--hover-bg);
+}}
+.legend {{
+margin-left: 15px;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+overflow-y: auto;
+background-color: var(--legend-bg);
+border-radius: 8px;
+padding: 15px;
+box-shadow: 0 3px 9px var(--legend-shadow);
+width: fit-content;
+transition: background-color 0.5s, box-shadow 0.5s;
+flex-shrink: 0;
+}}
+.legend h2 {{
+margin-top: 0;
+margin-bottom: 10px;
+font-size: 20px;
+font-family: 'MedievalSharp', cursive;
+color: var(--header-color);
+text-align: center;
+font-weight: bold;
+}}
+.legend hr {{
+width: 50%;
+border: 0;
+border-top: 2px solid #bbb;
+margin-bottom: 10px;
+}}
+.legend-item {{
+display: flex;
+align-items: center;
+margin-bottom: 10px;
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+padding: 6px 8px;
+border-radius: 6px;
+background-color: transparent;
+outline: none;
+}}
+.legend-item:hover {{
+transform: scale(1.05);
+box-shadow: 0 2px 6px var(--legend-shadow);
+background-color: rgba(0, 0, 0, 0.05);
+}}
+.legend-color {{
+width: 24px;
+height: 24px;
+margin-right: 12px;
+border-radius: 6px;
+border: 2px solid #ccc;
+box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}}
+.legend-item.active {{
+background-color: var(--active-legend-bg);
+border: 1px solid var(--active-legend-border);
+transform: scale(1.08);
+box-shadow: 0 3px 9px rgba(0, 0, 0, 0.2);
+}}
+.highlight {{
+opacity: 1 !important;
+transform: scale(1.1);
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}}
+.dimmed {{
+opacity: 0.3;
+}}
+.search-bar {{
+margin: 18px 0;
+width: 90%;
+max-width: 400px;
+display: flex;
+align-items: center;
+}}
+.search-bar input {{
+flex: 1;
+padding: 10px;
+border: 2px solid var(--search-border);
+border-radius: 8px 0 0 8px;
+outline: none;
+transition: border-color 0.3s, box-shadow 0.3s;
+background-color: var(--container-bg);
+color: var(--text-color);
+}}
+.search-bar input:focus {{
+border-color: var(--search-focus-border);
+box-shadow: 0 0 5px var(--search-focus-shadow);
+}}
+.search-bar button {{
+padding: 10px;
+border: 2px solid var(--search-border);
+border-left: none;
+background-color: var(--button-bg);
+color: var(--button-text);
+cursor: pointer;
+border-radius: 0 8px 8px 0;
+transition: background-color 0.3s, box-shadow 0.3s;
+}}
+.search-bar button:hover {{
+background-color: var(--button-hover-bg);
+box-shadow: 0 0 5px var(--button-hover-shadow);
+}}
+.color-picker {{
+margin-left: 8px;
+width: 28px;
+height: 20px;
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+border: none;
+cursor: pointer;
+background-color: transparent;
+padding: 0;
+}}
+.color-picker::-webkit-color-swatch-wrapper {{
+padding: 0;
+}}
+.color-picker::-webkit-color-swatch {{
+border-radius: 6px;
+border: 2px solid #bbb;
+}}
+.color-picker::-moz-color-swatch-wrapper {{
+padding: 0;
+}}
+.color-picker::-moz-color-swatch {{
+border-radius: 6px;
+border: 2px solid #bbb;
+}}
+.theme-switch-wrapper {{
+display: flex;
+align-items: center;
+margin: 10px 0 20px 0;
+}}
+.theme-switch-wrapper span {{
+margin-right: 10px;
+font-size: 1em;
+}}
+.theme-switch {{
+position: relative;
+display: inline-block;
+width: 50px;
+height: 24px;
+}}
+.theme-switch input {{
+opacity: 0;
+width: 0;
+height: 0;
+}}
+.slider {{
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+transition: .4s;
+border-radius: 34px;
+}}
+.slider:before {{
+position: absolute;
+content: "";
+height: 16px;
+width: 16px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}}
+input:checked + .slider {{
+background-color: #2196F3;
+}}
+input:focus + .slider {{
+box-shadow: 0 0 1px #2196F3;
+}}
+input:checked + .slider:before {{
+transform: translateX(26px);
+}}
+.zoom-controls {{
+position: absolute;
+bottom: 10px;
+right: 10px;
+display: flex;
+flex-direction: column;
+border-radius: 8px;
+overflow: hidden;
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+background-color: var(--container-bg);
+}}
+.zoom-button {{
+background-color: var(--button-bg);
+color: var(--button-text);
+border: none;
+padding: 8px 12px;
+cursor: pointer;
+text-align: center;
+font-size: 1em;
+transition: background-color 0.3s;
+}}
+.zoom-button:hover {{
+background-color: var(--button-hover-bg);
+}}
+.zoom-button:first-child {{
+border-bottom: 1px solid var(--search-border);
+}}
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" checked>
+            <span class="slider round"></span>
+        </label>
+        <span>Dark Mode</span>
+    </div>
+    <h1>Underworld Overseer Save Mapper</h1>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search Descriptor...">
+        <button onclick="searchDescriptor()">Search</button>
+    </div>
+    <div class="container">
+        {map_html}
+        <div class="zoom-controls">
+            <button class="zoom-button" id="zoom-in">+</button>
+            <button class="zoom-button" id="zoom-out">-</button>
+        </div>
+        <div class="legend">
+            <h2>Legend</h2>
+            <hr>
+            {legend_items_html}
+        </div>
+    </div>
+
+    <script>
+        const legendItems = document.querySelectorAll('.legend-item');
+        const mapCells = document.querySelectorAll('.map-cell');
+        const mapGrid = document.querySelector('.map-grid');
+        let currentZoom = 1.0;
+        mapGrid.style.setProperty('--grid-height', '{grid_height}');
+        mapGrid.style.setProperty('--grid-width', '{grid_width}');
+        let activeDescriptor = null;
+        const searchInput = document.getElementById('searchInput');
+        const zoomInButton = document.getElementById('zoom-in');
+        const zoomOutButton = document.getElementById('zoom-out');
+
+        function highlightDescriptor(descriptor) {{
+            if (!descriptor) {{
+                clearHighlight();
+                return;
+            }}
+
+            legendItems.forEach(i => i.classList.toggle('active', i.getAttribute('data-descriptor') === descriptor));
+            mapCells.forEach(c => {{
+                if (c.getAttribute('data-descriptor') === descriptor) {{
+                    c.classList.add('highlight');
+                    c.classList.remove('dimmed');
+                }} else {{
+                    c.classList.add('dimmed');
+                    c.classList.remove('highlight');
+                }}
+            }});
+            activeDescriptor = descriptor;
+            if (descriptor) {{
+                let minX = Infinity;
+                let maxX = -Infinity;
+                let minY = Infinity;
+                let maxY = -Infinity;
+                let highlightedCells = [];
+                mapCells.forEach(cell => {{
+                    if (cell.classList.contains('highlight')) {{
+                        highlightedCells.push(cell);
+                        const x = parseInt(cell.getAttribute('data-x'));
+                        const y = parseInt(cell.getAttribute('data-y'));
+                        minX = Math.min(minX, x);
+                        maxX = Math.max(maxX, x);
+                        minY = Math.min(minY, y);
+                        maxY = Math.max(maxY, y);
+                    }}
+                }});
+                if (highlightedCells.length > 0) {{
+                    const gridRect = mapGrid.getBoundingClientRect();
+                    const gridWidth = gridRect.width;
+                    const gridHeight = gridRect.height;
+                    const containerRect = document.querySelector('.container').getBoundingClientRect();
+                    const centerX = (minX + maxX) / 2;
+                    const centerY = (minY + maxY) / 2;
+                    const cellWidth = 20;
+                    const cellHeight = 20;
+                    const highlightedCenterXPixels = (centerX - parseInt(mapGrid.style.getPropertyValue('--grid-width')) / 2) * cellWidth;
+                    const highlightedCenterYPixels = (parseInt(mapGrid.style.getPropertyValue('--grid-height')) / 2 - centerY) * cellHeight;
+                    const gridOffsetX = (parseInt(mapGrid.style.getPropertyValue('--grid-width')) * cellWidth) / 2;
+                    const gridOffsetY = (parseInt(mapGrid.style.getPropertyValue('--grid-height')) * cellHeight) / 2;
+                    const scrollLeft = highlightedCenterXPixels * currentZoom - gridWidth / 2 + gridOffsetX * currentZoom;
+                    const scrollTop = highlightedCenterYPixels * currentZoom - gridHeight / 2 + gridOffsetY * currentZoom;
+                    mapGrid.scrollTo({{
+                        left: scrollLeft,
+                        top: scrollTop,
+                        behavior: 'smooth'
+                    }});
+                }}
+            }}
+        }}
+
+        function clearHighlight() {{
+            legendItems.forEach(i => i.classList.remove('active'));
+            mapCells.forEach(c => c.classList.remove('dimmed', 'highlight'));
+            activeDescriptor = null;
+        }}
+
+        legendItems.forEach(item => {{
+            item.addEventListener('click', () => {{
+                const descriptor = item.getAttribute('data-descriptor');
+
+                activeDescriptor === descriptor ? clearHighlight() : highlightDescriptor(descriptor);
+                item.focus();
+            }});
+        }});
+
+        mapCells.forEach(cell => {{
+            cell.addEventListener('click', () => {{
+                const descriptor = cell.getAttribute('data-descriptor');
+                if (descriptor) {{
+                    activeDescriptor === descriptor ? clearHighlight() : highlightDescriptor(descriptor);
+                    cell.focus();
+                }}
+            }});
+        }});
+
+        function searchDescriptor() {{
+            const query = searchInput.value.trim().toLowerCase();
+            if (!query) return;
+            const descriptor = Array.from(legendItems).find(item => {{
+                const labelText = item.querySelector('.legend-label').textContent.toLowerCase();
+                return labelText.startsWith(query);
+            }});
+            if (descriptor) {{
+                highlightDescriptor(descriptor.getAttribute('data-descriptor'));
+                descriptor.scrollIntoView({{
+                    behavior: 'smooth',
+                    block: 'center'
+                }});
+            }} else {{
+                alert('Descriptor not found!');
+            }}
+        }}
+
+        const colorPickers = document.querySelectorAll('.color-picker');
+        colorPickers.forEach(picker => {{
+            picker.addEventListener('input', (event) => {{
+                const newColor = event.target.value;
+                const descriptor = picker.getAttribute('data-descriptor');
+                const legendColorSpan = picker.previousElementSibling;
+                legendColorSpan.style.backgroundColor = newColor;
+                mapCells.forEach(cell => {{
+                    if (cell.getAttribute('data-descriptor') === descriptor) {{
+                        cell.style.backgroundColor = newColor;
+                    }}
+                }});
+            }});
+        }});
+
+        const checkbox = document.getElementById('checkbox');
+        checkbox.addEventListener('change', () => {{
+            document.body.classList.toggle('dark-mode');
+        }});
+        checkbox.addEventListener('focus', () => {{}});
+
+        searchInput.addEventListener('keydown', (event) => {{
+            if (event.key === 'Enter') {{
+                event.preventDefault();
+                searchDescriptor();
+            }}
+        }});
+
+        zoomInButton.addEventListener('click', () => {{
+            currentZoom = Math.min(currentZoom + 0.25, 2.0);
+            updateMapZoom();
+        }});
+
+        zoomOutButton.addEventListener('click', () => {{
+            currentZoom = Math.max(currentZoom - 0.25, 0.5);
+            updateMapZoom();
+        }});
+
+        function updateMapZoom() {{
+            mapGrid.style.transform = `scale(${{currentZoom}})`;
+        }}
+
+        legendItems[0].focus();
+    </script>
+</body>
+</html>

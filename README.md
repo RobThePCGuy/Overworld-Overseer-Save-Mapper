@@ -1,111 +1,75 @@
-# Underworld Overseer Map Mapper
+# Underworld Overseer Save Mapper
 
->[!IMPORTANT]
-> This is an **unofficial modification**. It is not supported by the developer, nor should you blame me or them if your toaster blows up. **Back up** the save file(s) before running the script.
->
-> In order for the script to find a JSON save game, you must have started the level and selected `Save and Exit`. For each map that you `Save and Exit`, you will be able to select from the script's main menu.
+[![Project Status](https://img.shields.io/badge/Status-Beta-orange)](https://www.repostatus.org/#beta)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## Features
+## Description
 
-- Scans the game save directory for JSON maps.
-- The script parses the JSON map data from the saved game JSON file(s).
-- Generates an accurate 2D grid of the level map.
-- Includes a legend that lists all descriptors with their corresponding colors.
-- Highlights grids per selection, dimming the rest.
-- Find descriptos easily with the search bar.
-- Uses a separate config file for changing colors and naming conventions.
-- Includes a command line interface.
+This tool visualizes save files from the game **Underworld Overseer** as interactive HTML maps. It allows you to:
 
-## Installation
+*   **View your dungeon layout:** See the rooms, paths, and features of your Underworld Overseer save in a web browser.
+*   **Customize appearance:**  Adjust colors for different map elements via a legend in the HTML output.
+*   **Search and highlight:**  Quickly find specific map features (like "Heart Center" or "Secret Basement") using the search bar.
+*   **Zoom and pan:** Easily navigate large maps using zoom controls and scrolling.
+*   **Dark mode:**  Switch between light and dark themes for comfortable viewing.
 
-1. Ensure you have Python 3.6 or later installed on your system. The script relies on several Python libraries, which can be installed using `pip`.
+This mapper is useful for:
 
-   ```bash
-   pip install numpy pandas matplotlib
-   ```
+*   **Planning your dungeon layout.**
+*   **Sharing your dungeon progress with others.**
+*   **Analyzing game mechanics and map generation.**
 
-2. Clone this repository to your local machine:
+## Installation (For running from source - Python required)
 
-   ```bash
-   git clone https://github.com/RobThePCGuy/Underworld-Overseer-Save-Mapper.git
-   cd Underworld-Overseer-Save-Mapper
-   ```
+If you want to run the script directly (Python is needed), follow these steps:
 
-3. Run the Script:
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/RobThePCGuy/Underworld-Overseer-Save-Mapper.git
+    cd Underworld-Overseer-Save-Mapper
+    ```
 
-   The following CLI will utilize the config file included in the repo, it will search for any save files, allow for selection, then output the HTML right next to the script.
+2.  **Install required Python packages:**
+    ```bash
+    pip install pandas matplotlib pathlib
+    ```
 
-     ```bash
-     python mapit.py -c "config/colors.json"
-     ```
+## Usage
 
-     - `-s` or `--saves_dir`: Specify a custom saves directory.
-     - `-o` or `--output`: Define a custom output HTML file path.
-     - `-c` or `--config`: Provide a JSON configuration file for customizing colors and labels.
+1.  **Run the script:** Execute the `main.py` script:
+    ```bash
+    python main.py
+    ```
 
-### Sample Configuration File (`config/colors.json`):
+2.  **Select a save file:** The script will list available Underworld Overseer save files from the default saves directory.
+    *   Choose a save file by entering its number.
+    *   Alternatively, you can enter a custom file path to a `.json` save file.
 
-To utilize the configuration file for custom colors and labels, edit or create a `config/colors.json`.
+3.  **Open the HTML map:** After processing, the script will generate an HTML file (e.g., `Besieged.html`) in the same directory as `main.py`. Open this HTML file in your web browser (Chrome, Firefox, etc.) to view the interactive map.
 
-```json
-{
-    "custom_colors": {
-        "obsidian": "#120014",
-        "stone": "#3b3a3a",
-        "heart": "#FF0000",
-        "claimed": "#0d9753",
-        "enemyPath": "#f0f0f0",
-        "stairs": "#FFFFFF",
-        "gold": "#FFD700",
-        "secretstonecarved": "#FFFF00",
-        "secretbasement": "#A9A9A9",
-        "infinitemine": "#D8BFD8"
-    },
-    "custom_labels": {
-        "enemypath": "Enemy Path",
-        "hornethive": "Hornet Hive",
-        "secretbasement": "Secret Basement",
-        "waterbridge": "Water Bridge",
-        "beetlenest": "Beetle Nest",
-        "factorybubble": "Bubble Factory",
-        "stonemine": "Stone Mine",
-        "enemypathmonastery": "Enemy Path Monastery",
-        "enemypathdesert": "Enemy Path Desert",
-        "heartcenter": "Heart Center",
-        "heartcenternofloor": "Heart Center No Floor",
-        "infinitemine": "Infinite Gold Mine",
-        "portalcenter": "Portal Center",
-        "portalbonefairy": "Portal Bone Fairy",
-        "portalbonefairycenter": "Portal Bone Fairy Center",
-        "sapperpath": "Sapper Path",
-        "guardpost": "Guard Post",
-        "secretobsidiancarved": "Secret Obsidian Carved",
-        "secretstonecarved": "Secret Stone Carved",
-        "secretstonesewer": "Secret Stone Sewer"
-    }
-}
-```
+## Usage (Running the Executable - No Python needed)
 
-4. The script looks for JSON save files in the default directory:
+1.  **Download the Executable:** Download the the .exe from
+2.  **Run the Executable:**  Place the app exe in a convenient location and run it.
+3.  **Follow on-screen instructions:** The executable will guide you through selecting a save file and generating the HTML map.
 
-    `~\AppData\LocalLow\MyronSoftware\UnderworldOverseer\Saves`
+## Configuration
 
-    You can choose a number that represents the save file to process, or you can enter a custom path.
+*   **`CONFIG_CUSTOM_COLORS` and `CONFIG_CUSTOM_LABELS`:** You can customize the colors and labels of map elements by editing these dictionaries in the `main.py` script before generating the EXE or running from source.
 
-5. After selecting a file, the script will process the map information and create an HTML file next to it.
+##  License
 
-6. To use the map, open it in your preferred web browser.
+This project is licensed under the [MIT License](LICENSE) - see the `LICENSE` file for details.
 
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request with your enhancements or bug fixes.
 
-## License
+## Issues and Feature Requests
 
-This project is licensed under the [MIT License](LICENSE).
+If you encounter any issues or have suggestions for new features, please open an issue on the [GitHub issue tracker]([link to your repo's issues]).
 
-## Support
+## Acknowledgements
 
-For any issues or questions, please open an issue in the [GitHub repository](https://github.com/RobThePCGuy/Underworld-Overseer-Save-Mapper/issues).
-
-*Happy mapping!*
+*   This tool was inspired by and built for the game **Underworld Overseer** by Myron Software.
+*   Uses [pandas](https://pandas.pydata.org/), [matplotlib](https://matplotlib.org/), and [PyInstaller](https://pyinstaller.org/).
